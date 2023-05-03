@@ -6,19 +6,25 @@ import axios from "axios";
 export default function Auth() {
   const { username, secret, setUsername, setSecret } = useContext(Context);
 
-  const router = useRouter()
+  const router = useRouter();
 
   const onSubmit = (e) => {
     e.preventDefault();
 
     if (username.length === 0 || username.length === 0) return;
 
-    axios.put( "https://api.chatengine.io/users" ,{
-      username, secret},
-      {headers: {"Private-key" : "2d5f661f-492e-49c4-b824-8c46e32c940c"}})
-      .then(res => {
-        router.push('/chats')
-      })
+    axios
+      .put(
+        "https://api.chatengine.io/users",
+        {
+          username,
+          secret,
+        },
+        { headers: { "Private-key": "2d5f661f-492e-49c4-b824-8c46e32c940c" } }
+      )
+      .then((res) => {
+        router.push("/chats");
+      });
   };
   return (
     <div className="background">
