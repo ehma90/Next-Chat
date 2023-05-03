@@ -1,15 +1,45 @@
-import React, {useState, useContext, useEffect} from "react";
+import {useContext, useState, useEffect} from "react"
 import { Context } from "../context";
-import { useRouter } from "next/dist/client/router";
-import dynamic from "next/dynamic"
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 
-const ChatEngine = dynamic(() => {
+const ChatEngine = dynamic(() =>
   import("react-chat-engine").then((module) => module.ChatEngine)
-})
-const MessageFormSocial = dynamic(() => {
+);
+const MessageFormSocial = dynamic(() =>
   import("react-chat-engine").then((module) => module.MessageFormSocial)
-})
+);
 
 export default function Chats() {
-  return <div className="background">chats</div>;
+  const { username, secret } = useContext(Context);
+  const [showChat, setShowChat] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof document !== undefined) {
+      setShowChat(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (username === "" || secret === "") {
+      router.push("/");
+    }
+  }, [username, secret]);
+
+  if (!showChat) return <div />;
+
+  return (
+    <div className="background">
+      <div className="shadow">
+        <ChatEngine
+          height="calc(100vh - 212px)"
+          projectID="c89f7340-a8ef-494c-befc-5b732cb1c680"
+          userName={username}
+          userSecret={secret}
+          renderNewMessageForm={() => <MessageFormSocial />}
+        />
+      </div>
+    </div>
+  );
 }
